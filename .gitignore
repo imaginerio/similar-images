@@ -1,0 +1,8 @@
+image_to_labels.json
+images/*
+image_vectors/*
+database/*
+nearest_neighbors/*
+
+node_modules
+.vscode
