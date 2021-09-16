@@ -1,7 +1,7 @@
 from annoy import AnnoyIndex
 from scipy import spatial
 from nltk import ngrams
-import random, json, glob, os, codecs, random
+import random, json, glob, os, codecs
 import numpy as np
 
 # data structures
