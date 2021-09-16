@@ -1,4 +1,6 @@
-fs = require('fs');
+var realFs = require('fs')
+var gracefulFs = require('graceful-fs')
+gracefulFs.gracefulify(realFs)
 path = require('path');
 const pathDir = __dirname + '/nearest_neighbors'
 const datastore = require('nedb')
@@ -6,9 +8,10 @@ const datastore = require('nedb')
 const db = new datastore('./database/database.db')
 db.loadDatabase()
 
-const extractor = (error, files) => {
-    if (error) process.exit(1);
-
+realFs.readdir(pathDir, function(err, files){
+    if (err){
+        return console.log(err);
+    }
     files.forEach(file => {
         // console.log(file)
         let fromPath = path.join(pathDir, file)
@@ -20,7 +23,8 @@ const extractor = (error, files) => {
             fileName: file,
             neighbors: {}
         }
-        fs.readFile(fromPath, (err, data) => {
+
+        realFs.readFile(fromPath, (err, data) => {
             dbItem.neighbors = JSON.parse(data).filter((item, index) => {
                 return item.filename !== fileId
             }) //first item its self, has similarity 1
@@ -28,6 +32,4 @@ const extractor = (error, files) => {
             console.log(fileId)
         })
     });
-}
-
-fs.readdir(pathDir, extractor)
+});
